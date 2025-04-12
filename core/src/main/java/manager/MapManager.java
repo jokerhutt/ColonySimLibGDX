@@ -1,0 +1,69 @@
+package manager;
+
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import entity.Entity;
+import entity.Entity_Tree;
+import jokerhut.main.Box2DWorld;
+import jokerhut.main.GameScreen;
+
+public class MapManager {
+
+    GameScreen screen;
+    private String mapPath = "VillageGDXMap.tmx";
+
+    public MapObjects rockObjects;
+    public MapObjects treeObjects;
+
+    public Array<Entity_Tree> treeArray;
+
+
+    public MapManager (GameScreen screen) {
+        this.screen = screen;
+    }
+
+    public TiledMap initialiseGameMap () {
+        return new TmxMapLoader().load(mapPath);
+    }
+
+    public void initialiseWorldObjects () {
+
+        MapLayer treeLayer = screen.gameMap.getLayers().get("Tree");
+        MapLayer rockLayer = screen.gameMap.getLayers().get("Rock");
+
+        this.treeObjects = treeLayer.getObjects();
+        this.rockObjects = rockLayer.getObjects();
+
+    }
+
+    public void initialiseObjectArrays () {
+
+        initialiseWorldObjects();
+
+        this.treeArray = new Array<>();
+
+        for (MapObject obj : treeObjects) {
+
+            if (obj instanceof RectangleMapObject) {
+                RectangleMapObject rectObj = (RectangleMapObject) obj;
+                float x = rectObj.getRectangle().x;
+                float y = rectObj.getRectangle().y;
+                Vector2 newPos = new Vector2(x, y);
+
+                Entity_Tree tree = new Entity_Tree(newPos, 16, 32, screen);
+                tree.createBody(screen.box2DWorld);
+                treeArray.add(tree);
+                screen.box2DWorld.addEntityToMap(tree);
+            }
+
+        }
+
+    }
+
+}
