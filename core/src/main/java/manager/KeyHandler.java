@@ -36,6 +36,14 @@ public class KeyHandler {
 
     }
 
+    public boolean wantsToRun () {
+        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean handleSettingDiagonalMovement () {
 
         if (Gdx.input.isKeyPressed(Input.Keys.W) && Gdx.input.isKeyPressed(Input.Keys.A)) {

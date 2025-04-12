@@ -22,12 +22,16 @@ public class Player extends Entity {
     public float speed;
     public Vector2 direction = new Vector2(0, 1);
     public boolean moving;
+    public float runningSpeed = 1.2f;
+    public float originalSpeed;
 
     public Player (Vector2 pos, float width, float height, GameScreen screen) {
         super(pos, width, height, screen);
         this.texture = new Texture("Player.png");
         this.keyHandler = new KeyHandler(this);
-        this.speed = 2f * Const.OGTILESIZE;
+        this.originalSpeed = 2f * Const.OGTILESIZE;
+        this.runningSpeed = originalSpeed * 1.5f;
+        this.speed = originalSpeed;
         createBody(screen.box2DWorld);
         screen.box2DWorld.addEntityToMap(this);
         setupAnimations();
@@ -44,11 +48,11 @@ public class Player extends Entity {
         };
 
 
-        idleDown = split[8][1];
-        idleUp   = split[9][1];
+        idleDown = split[7][0];
+        idleUp   = split[8][0];
 
-        idleRight = split[8][1];
-        idleLeft = new TextureRegion(split[8][1]);
+        idleRight = split[7][0];
+        idleLeft = new TextureRegion(split[7][0]);
         idleLeft.flip(true, false);
 
         walkDown = new Animation<>(0.2f, split[0][0],  split[0][1]);
@@ -68,8 +72,6 @@ public class Player extends Entity {
 
         if (moving) {
 
-            System.out.println(direction.y + ", " + direction.x);
-
             if (direction.y > 0) {
                 sprite.setRegion(walkUp.getKeyFrame(animationTimer, true));
             } else if (direction.y < 0 && direction.x < 0) {
@@ -83,17 +85,20 @@ public class Player extends Entity {
             }
 
         } else{
-            if (direction.y == 1) {
+            if (direction.y > 0) {
                 sprite.setRegion(idleUp);
-            }
-            else if (direction.x == -1) {
+            } else if (direction.y < 0 && direction.x < 0) {
                 sprite.setRegion(idleLeft);
-            }
-            else if (direction.y == -1) {
+            } else if (direction.y < 0) {
                 sprite.setRegion(idleDown);
             }
-            else if (direction.x == 1) {
+
+
+            else if (direction.x > 0 && direction.y == 0) {
+                System.out.println("Idleright " + direction.x + " " + direction.y);
                 sprite.setRegion(idleRight);
+            } else if (direction.x < 0 && direction.y == 0) {
+                sprite.setRegion(idleLeft);
             }
         }
 
@@ -127,15 +132,21 @@ public class Player extends Entity {
 
     public void update (float delta) {
 
-        animationTimer += delta;
+        if (keyHandler.wantsToRun()){
+            speed = runningSpeed;
+        } else {
+            speed = originalSpeed;
+        }
 
         if (!keyHandler.handleSettingDiagonalMovement()) {
             keyHandler.handleSettingCardinalMovement();
         }
 
         if (moving) {
+            animationTimer += delta;
             applyVelocityFromDirection();
         } else {
+            animationTimer = 0f;
             body.setLinearVelocity(0, 0);
         }
 

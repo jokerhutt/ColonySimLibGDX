@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
 
         player.render(batch);
 
-        // ✅ Render all trees
+        //Render all trees
         for (Entity_Tree tree : mapManager.treeArray) {
             tree.render(batch);
         }
