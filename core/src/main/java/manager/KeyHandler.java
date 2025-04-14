@@ -112,6 +112,12 @@ public class KeyHandler {
 
     }
 
+    public void toggleCameraZoom () {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+            player.screen.zoomCamera = !player.screen.zoomCamera;
+        }
+    }
+
     public void checkSwitchItem () {
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             if (player.actionItem != ActionItem.AXE) {

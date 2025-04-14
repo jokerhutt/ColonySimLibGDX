@@ -18,7 +18,7 @@ public abstract class Entity {
     public Sprite sprite;
     public Body body;
     String type;
-    GameScreen screen;
+    public GameScreen screen;
 
     public ActionState actionState = ActionState.IDLE;
 

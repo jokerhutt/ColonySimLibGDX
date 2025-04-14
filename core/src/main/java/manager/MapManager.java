@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import constants.Const;
 import entity.Entity;
 import entity.Entity_Rock;
 import entity.Entity_Tree;
@@ -55,11 +56,11 @@ public class MapManager {
 
             if (obj instanceof RectangleMapObject) {
                 RectangleMapObject rectObj = (RectangleMapObject) obj;
-                float x = rectObj.getRectangle().x;
-                float y = rectObj.getRectangle().y;
+                float x = rectObj.getRectangle().x / Const.OGTILESIZE;
+                float y = rectObj.getRectangle().y / Const.OGTILESIZE;
                 Vector2 newPos = new Vector2(x, y);
 
-                Entity_Tree tree = new Entity_Tree(newPos, 16, 32, screen);
+                Entity_Tree tree = new Entity_Tree(newPos, 1, 2, screen);
                 tree.createBody(screen.box2DWorld);
                 treeArray.add(tree);
                 screen.box2DWorld.addEntityToMap(tree);
@@ -70,11 +71,11 @@ public class MapManager {
         for (MapObject obj : rockObjects) {
             if (obj instanceof RectangleMapObject) {
                 RectangleMapObject rectObj = (RectangleMapObject) obj;
-                float x = rectObj.getRectangle().x;
-                float y = rectObj.getRectangle().y;
+                float x = rectObj.getRectangle().x / Const.OGTILESIZE;
+                float y = rectObj.getRectangle().y / Const.OGTILESIZE;
                 Vector2 newPos = new Vector2(x, y);
 
-                Entity_Rock rock = new Entity_Rock(newPos, 16, 16, screen);
+                Entity_Rock rock = new Entity_Rock(newPos, 1, 1, screen);
                 rock.createBody(screen.box2DWorld);
                 rockArray.add(rock);
                 screen.box2DWorld.addEntityToMap(rock);

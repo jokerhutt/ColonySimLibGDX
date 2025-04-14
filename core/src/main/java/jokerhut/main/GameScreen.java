@@ -25,6 +25,7 @@ public class GameScreen implements Screen {
     public TiledMap gameMap;
     public Box2DWorld box2DWorld;
     SpriteBatch batch;
+    public boolean zoomCamera = true;
     OrthogonalTiledMapRenderer mapRenderer;
     public Player player;
     public HUD hud;
@@ -43,11 +44,11 @@ public class GameScreen implements Screen {
         mapManager.initialiseObjectArrays();
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        gameCamera = new GameCamera();
+        gameCamera = new GameCamera(this);
 
-        player = new Player(new Vector2(10 * Const.OGTILESIZE, 10 * Const.OGTILESIZE),  16, 16, this);
+        player = new Player(new Vector2(10, 10), 1f, 1f, this);
         // Set up renderer
-        mapRenderer = new OrthogonalTiledMapRenderer(gameMap, 1f);
+        mapRenderer = new OrthogonalTiledMapRenderer(gameMap, 1f / Const.OGTILESIZE);
         hud = new HUD(this, batch);
 
 
@@ -57,6 +58,14 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
 
+        player.keyHandler.toggleCameraZoom();
+        if (zoomCamera) {
+            gameCamera.getCamera().zoom = 0.5f;
+        } else {
+            gameCamera.getCamera().zoom = 1f;
+        }
+
+        gameCamera.updateCamera(delta);
         //UPDATE
         player.update(delta);
         for (Entity_Tree tree : mapManager.treeArray) {

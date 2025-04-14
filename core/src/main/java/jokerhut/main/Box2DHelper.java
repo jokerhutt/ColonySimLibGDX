@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import constants.Const;
 import entity.Player;
 
 public class Box2DHelper {
@@ -13,10 +14,10 @@ public class Box2DHelper {
 
         System.out.println("Adding sensor");
 
-        float size = 8f;
+        float size = 8f / Const.OGTILESIZE;
         Vector2 sensorOffset = new Vector2();
 
-        float pushStrength = 0.2f;
+        float pushStrength = 0.00001f;
         Vector2 nudge = new Vector2();
 
         switch (player.facingDirection) {
@@ -44,13 +45,10 @@ public class Box2DHelper {
             case SOUTHWEST -> sensorOffset.set(size * 0.7071f, -size * 0.7071f);
         }
 
-        sensorOffset.add(MathUtils.random(-0.5f, 0.5f), MathUtils.random(-0.5f, 0.5f));
-
-
 
         // Create sensor shape at offset
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(4f, 4f, sensorOffset, 0f);
+        shape.setAsBox(4f / Const.OGTILESIZE, 4f / Const.OGTILESIZE, sensorOffset, 0f);
 
         FixtureDef fd = new FixtureDef();
         fd.shape = shape;

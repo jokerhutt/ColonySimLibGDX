@@ -3,6 +3,7 @@ package entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -31,7 +32,7 @@ public class Player extends Entity {
     public float attackTimer = 0f;
     public float attackLength = 0.8f;
     public ActionItem actionItem = ActionItem.AXE;
-    KeyHandler keyHandler;
+    public KeyHandler keyHandler;
     AnimationHandler animationHandler;
     public float speed;
     public Vector2 direction = new Vector2(0, 1);
@@ -52,7 +53,7 @@ public class Player extends Entity {
         super(pos, width, height, screen);
         this.texture = new Texture("Player.png");
         this.keyHandler = new KeyHandler(this);
-        this.originalSpeed = 2f * Const.OGTILESIZE;
+        this.originalSpeed = 2f;
         this.attackHandler = new AttackHandler(this);
         this.runningSpeed = originalSpeed * 1.5f;
         this.speed = originalSpeed;
@@ -65,6 +66,13 @@ public class Player extends Entity {
         attackRect = new Rectangle();
 //        updateAxeCollisionZone();
 
+    }
+
+    public float getCenterX() {
+        return this.body.getPosition().x + this.sprite.getWidth() / 2f;
+    }
+    public float getCenterY () {
+        return this.body.getPosition().y + this.sprite.getHeight() / 2f;
     }
 
     public void setupSprite () {
