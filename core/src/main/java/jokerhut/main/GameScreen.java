@@ -4,8 +4,10 @@ import camera.GameCamera;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -21,7 +23,8 @@ public class GameScreen implements Screen {
     public Box2DWorld box2DWorld;
     SpriteBatch batch;
     OrthogonalTiledMapRenderer mapRenderer;
-    Player player;
+    public Player player;
+    private ShapeRenderer shapeRenderer;
 
     public GameCamera gameCamera;
 
@@ -32,11 +35,13 @@ public class GameScreen implements Screen {
         //MAP
         mapManager = new MapManager(this);
         gameMap = mapManager.initialiseGameMap();
-        box2DWorld = new Box2DWorld();
+        box2DWorld = new Box2DWorld(this);
         mapManager.initialiseObjectArrays();
-        batch = new SpriteBatch();
 
+        batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
         gameCamera = new GameCamera();
+
         player = new Player(new Vector2(10 * Const.OGTILESIZE, 10 * Const.OGTILESIZE),  16, 16, this);
         // Set up renderer
         mapRenderer = new OrthogonalTiledMapRenderer(gameMap, 1f);
@@ -50,6 +55,9 @@ public class GameScreen implements Screen {
 
         //UPDATE
         player.update(delta);
+        for (Entity_Tree tree : mapManager.treeArray) {
+            tree.update(delta);
+        }
 
         //set view to game camere
         mapRenderer.setView(gameCamera.getCamera());

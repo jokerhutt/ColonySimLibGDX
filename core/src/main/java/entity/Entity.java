@@ -13,10 +13,14 @@ public abstract class Entity {
     Texture texture;
     public Vector2 pos;
     public float width, height;
+    public float health = 3f;
+    public float maxHealth;
     public Sprite sprite;
     public Body body;
     String type;
     GameScreen screen;
+
+    public ActionState actionState = ActionState.NORMAL;
 
     public Entity(Vector2 pos, float width, float height, GameScreen screen) {
         this.pos = pos;
