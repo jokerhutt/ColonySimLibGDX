@@ -13,6 +13,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import constants.Const;
+import entity.Entity_Rock;
 import entity.Entity_Tree;
 import entity.Player;
 import hud.HUD;
@@ -62,6 +63,10 @@ public class GameScreen implements Screen {
             tree.update(delta);
         }
 
+        for (Entity_Rock rock : mapManager.rockArray) {
+            rock.update(delta);
+        }
+
         //set view to game camere
         mapRenderer.setView(gameCamera.getCamera());
         //draw map
@@ -76,6 +81,10 @@ public class GameScreen implements Screen {
         //Render all trees
         for (Entity_Tree tree : mapManager.treeArray) {
             tree.render(batch);
+        }
+
+        for (Entity_Rock rock : mapManager.rockArray) {
+            rock.render(batch);
         }
 
         batch.end();

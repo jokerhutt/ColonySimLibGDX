@@ -16,6 +16,7 @@ public class HUD {
     GameScreen screen;
     private BitmapFont font = new BitmapFont();
     public PairActorGroup woodDisplay;
+    public PairActorGroup rockDisplay;
     Table woodTable;
 
     public HUD (GameScreen screen, SpriteBatch batch) {
@@ -25,9 +26,11 @@ public class HUD {
         Gdx.input.setInputProcessor(stage);
 
         woodDisplay = new PairActorGroup(screen, "lumberResourceIcon.png", "Wood:", screen.player.woodCount, "left", 'M', 2f);
+        rockDisplay= new PairActorGroup(screen, "rockResourceIcon.png", "Wood:", screen.player.woodCount, "left", 'M', 2f);
         woodTable = new Table();
         woodTable.top().right().pad(10).padRight(50);
         woodTable.setFillParent(true);
+        woodTable.add(rockDisplay).padRight(40).padTop(10);
         woodTable.add(woodDisplay).padTop(10); // no need to right-align here
         stage.addActor(woodTable);
 

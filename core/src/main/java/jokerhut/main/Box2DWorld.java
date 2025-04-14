@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import entity.Entity;
+import entity.Entity_Rock;
 import entity.Entity_Tree;
 import entity.Player;
 
@@ -49,7 +50,7 @@ public class Box2DWorld {
                 }
 
                 //TODO rock logic
-                if ("pickaxeSensor".equals(sensorTag) && target instanceof Entity_Tree rock) {
+                if ("pickaxeSensor".equals(sensorTag) && target instanceof Entity_Rock rock) {
                     rock.queueHit();
                 }
 

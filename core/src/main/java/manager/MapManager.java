@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import entity.Entity;
+import entity.Entity_Rock;
 import entity.Entity_Tree;
 import jokerhut.main.Box2DWorld;
 import jokerhut.main.GameScreen;
@@ -22,6 +23,7 @@ public class MapManager {
     public MapObjects treeObjects;
 
     public Array<Entity_Tree> treeArray;
+    public Array<Entity_Rock> rockArray;
 
 
     public MapManager (GameScreen screen) {
@@ -47,6 +49,7 @@ public class MapManager {
         initialiseWorldObjects();
 
         this.treeArray = new Array<>();
+        this.rockArray = new Array<>();
 
         for (MapObject obj : treeObjects) {
 
@@ -62,6 +65,20 @@ public class MapManager {
                 screen.box2DWorld.addEntityToMap(tree);
             }
 
+        }
+
+        for (MapObject obj : rockObjects) {
+            if (obj instanceof RectangleMapObject) {
+                RectangleMapObject rectObj = (RectangleMapObject) obj;
+                float x = rectObj.getRectangle().x;
+                float y = rectObj.getRectangle().y;
+                Vector2 newPos = new Vector2(x, y);
+
+                Entity_Rock rock = new Entity_Rock(newPos, 16, 16, screen);
+                rock.createBody(screen.box2DWorld);
+                rockArray.add(rock);
+                screen.box2DWorld.addEntityToMap(rock);
+            }
         }
 
     }
