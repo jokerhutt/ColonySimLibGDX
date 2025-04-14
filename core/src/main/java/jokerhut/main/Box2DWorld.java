@@ -20,28 +20,39 @@ public class Box2DWorld {
     public Box2DWorld (GameScreen screen) {
         this.screen = screen;
         world = new World(new Vector2(0, 0), true);
+        handleContactListenerSetup();
+    }
+
+    public void handleContactListenerSetup () {
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
-                System.out.println("BegginingContact");
                 Fixture a = contact.getFixtureA();
                 Fixture b = contact.getFixtureB();
 
-                handleAxeHit(a, b);
-                handleAxeHit(b, a);
+                handleHit(a, b);
+                handleHit(b, a);
             }
 
             @Override public void endContact(Contact contact) {}
             @Override public void preSolve(Contact contact, Manifold oldManifold) {}
             @Override public void postSolve(Contact contact, ContactImpulse impulse) {}
 
-            public void handleAxeHit(Fixture sensor, Fixture other) {
-                System.out.println("Hndling axe hit");
-                if ("axeSensor".equals(sensor.getUserData()) &&
-                    other.getBody().getUserData() instanceof Entity_Tree tree) {
-                    System.out.println("Hit a tteree");
+            public void handleHit(Fixture sensor, Fixture other) {
+
+                Object sensorTag = sensor.getUserData();
+                Object target = other.getBody().getUserData();
+
+                if ("axeSensor".equals(sensorTag) && target instanceof Entity_Tree tree) {
+                    System.out.println("Hit a tree");
                     tree.queueHit();
                 }
+
+                //TODO rock logic
+                if ("pickaxeSensor".equals(sensorTag) && target instanceof Entity_Tree rock) {
+                    rock.queueHit();
+                }
+
             }
         });
     }

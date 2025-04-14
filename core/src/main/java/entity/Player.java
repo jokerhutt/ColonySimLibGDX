@@ -12,8 +12,10 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import constants.Const;
+import jokerhut.main.AnimationHandler;
 import jokerhut.main.Box2DWorld;
 import jokerhut.main.GameScreen;
+import manager.AttackHandler;
 import manager.KeyHandler;
 
 public class Player extends Entity {
@@ -23,196 +25,46 @@ public class Player extends Entity {
     public Animation<TextureRegion> walkUpRight, walkUpLeft, walkDownLeft, walkDownRight;
     public Animation<TextureRegion> axeDown, axeUp, axeLeft, axeRight;
     public Animation<TextureRegion> axeUpRight, axeUpLeft, axeDownLeft, axeDownRight;
+    public Animation<TextureRegion> pickaxeDown, pickaxeUp, pickaxeLeft, pickaxeRight;
+    public Animation<TextureRegion> pickaxeUpRight, pickaxeUpLeft, pickaxeDownLeft, pickaxeDownRight;
     public float animationTimer = 0f;
     public float attackTimer = 0f;
     public float attackLength = 0.8f;
-
+    public ActionItem actionItem = ActionItem.AXE;
     KeyHandler keyHandler;
+    AnimationHandler animationHandler;
     public float speed;
     public Vector2 direction = new Vector2(0, 1);
     public Vector2 inputDirection = new Vector2(0, 0);
     public boolean moving;
     public float runningSpeed = 1.2f;
     public float originalSpeed;
-
+    public AttackHandler attackHandler;
     public Rectangle attackRect;
-    public Fixture axeSensorFixture = null;
+    public Fixture actionSensorFixture = null;
     public FacingDirection facingDirection = FacingDirection.SOUTH;
     public boolean hasHitThisAttack = false;
+
+    public int woodCount = 0;
+    public int stoneCount = 0;
 
     public Player (Vector2 pos, float width, float height, GameScreen screen) {
         super(pos, width, height, screen);
         this.texture = new Texture("Player.png");
         this.keyHandler = new KeyHandler(this);
         this.originalSpeed = 2f * Const.OGTILESIZE;
+        this.attackHandler = new AttackHandler(this);
         this.runningSpeed = originalSpeed * 1.5f;
         this.speed = originalSpeed;
+        this.animationHandler = new AnimationHandler(this);
         createBody(screen.box2DWorld);
         screen.box2DWorld.addEntityToMap(this);
-        setupAnimations();
+        animationHandler.setupAnimations();
         setupSprite();
 
         attackRect = new Rectangle();
 //        updateAxeCollisionZone();
 
-    }
-
-    public void setupAnimations () {
-
-        Texture sheet = new Texture ("playerSheetNew.png");
-        TextureRegion[][] split = TextureRegion.split(sheet, 32, 32);
-
-        idleDown = split[0][0];
-        idleUp   = split[4][0];
-
-        idleRight = split[2][0];
-        idleLeft = split[6][0];
-
-        idleUpRight = split[3][0];
-        idleUpLeft = split[5][0];
-        idleDownRight = split[1][0];
-        idleDownLeft = split[7][0];
-
-        walkDown = new Animation<>(0.2f, split[0][2], split[0][3],  split[0][4]);
-        walkUp   = new Animation<>(0.2f, split[4][2], split[4][3],  split[4][4]);
-        walkRight = new Animation<>(0.2f, split[2][2], split[2][3],  split[2][4]);
-        walkLeft = new Animation<>(0.2f, split[6][2], split[6][3],  split[6][4]);
-
-        walkUpRight = new Animation<>(0.2f, split[3][2], split[3][3],  split[3][4]);
-        walkUpLeft   = new Animation<>(0.2f, split[5][2], split[5][3],  split[5][4]);
-        walkDownRight = new Animation<>(0.2f, split[1][2], split[1][3],  split[1][4]);
-        walkDownLeft = new Animation<>(0.2f, split[7][2], split[7][3],  split[7][4]);
-
-        axeDown = new Animation<>(0.2f, split[0][13], split[0][14],  split[0][15]);
-        axeUp   = new Animation<>(0.2f, split[4][13], split[4][14],  split[4][15]);
-        axeRight = new Animation<>(0.2f, split[2][13], split[2][14],  split[2][15]);
-        axeLeft = new Animation<>(0.2f, split[6][13], split[6][14],  split[6][15]);
-
-        axeUpRight = new Animation<>(0.2f, split[3][13], split[3][14],  split[3][15]);
-        axeUpLeft   = new Animation<>(0.2f, split[5][13], split[5][14],  split[5][15]);
-        axeDownRight = new Animation<>(0.2f, split[1][13], split[1][14],  split[1][15]);
-        axeDownLeft = new Animation<>(0.2f, split[7][13], split[7][14],  split[7][15]);
-
-    }
-
-    public void updateSpriteAnimation () {
-
-        if (actionState == ActionState.MOVING) {
-
-            if (facingDirection == FacingDirection.NORTH) {
-                sprite.setRegion(walkUp.getKeyFrame(animationTimer, true));
-            } else if (facingDirection == FacingDirection.EAST) {
-                sprite.setRegion(walkLeft.getKeyFrame(animationTimer, true));
-            }else if (facingDirection == FacingDirection.SOUTH) {
-                sprite.setRegion(walkDown.getKeyFrame(animationTimer, true));
-            } else if (facingDirection == FacingDirection.WEST) {
-                sprite.setRegion(walkRight.getKeyFrame(animationTimer, true));
-            }
-
-            else if (facingDirection == FacingDirection.NORTHEAST) {
-                sprite.setRegion(walkUpLeft.getKeyFrame(animationTimer, true));
-            } else if (facingDirection == FacingDirection.NORTHWEST) {
-                sprite.setRegion(walkUpRight.getKeyFrame(animationTimer, true));
-            } else if (facingDirection == FacingDirection.SOUTHEAST) {
-                sprite.setRegion(walkDownLeft.getKeyFrame(animationTimer, true));
-            } else if (facingDirection == FacingDirection.SOUTHWEST) {
-                sprite.setRegion(walkDownRight.getKeyFrame(animationTimer, true));
-            }
-
-        } else if (actionState == ActionState.IDLE) {
-            if (facingDirection == FacingDirection.NORTH) {
-                sprite.setRegion(idleUp);
-            } else if (facingDirection == FacingDirection.EAST) {
-                sprite.setRegion(idleLeft);
-            } else if (facingDirection == FacingDirection.SOUTH) {
-                sprite.setRegion(idleDown);
-            } else if (facingDirection == FacingDirection.WEST) {
-                sprite.setRegion(idleRight);
-            } else if (facingDirection == FacingDirection.NORTHWEST) {
-                sprite.setRegion(idleUpRight);
-            } else if (facingDirection == FacingDirection.NORTHEAST) {
-                sprite.setRegion(idleUpLeft);
-            } else if (facingDirection == FacingDirection.SOUTHWEST) {
-                sprite.setRegion(idleDownRight);
-            } else if (facingDirection == FacingDirection.SOUTHEAST) {
-                sprite.setRegion(idleDownLeft);
-            }
-        } else if (actionState == ActionState.ATTACKING) {
-            if (facingDirection == FacingDirection.NORTH) {
-                sprite.setRegion(axeUp.getKeyFrame(animationTimer, true));
-            } else if (facingDirection == FacingDirection.EAST) {
-                sprite.setRegion(axeLeft.getKeyFrame(animationTimer, true));
-            }else if (facingDirection == FacingDirection.SOUTH) {
-                sprite.setRegion(axeDown.getKeyFrame(animationTimer, true));
-            } else if (facingDirection == FacingDirection.WEST) {
-                sprite.setRegion(axeRight.getKeyFrame(animationTimer, true));
-            }
-
-            else if (facingDirection == FacingDirection.NORTHEAST) {
-                sprite.setRegion(axeUpLeft.getKeyFrame(animationTimer, true));
-            } else if (facingDirection == FacingDirection.NORTHWEST) {
-                sprite.setRegion(axeUpRight.getKeyFrame(animationTimer, true));
-            } else if (facingDirection == FacingDirection.SOUTHEAST) {
-                sprite.setRegion(axeDownLeft.getKeyFrame(animationTimer, true));
-            } else if (facingDirection == FacingDirection.SOUTHWEST) {
-                sprite.setRegion(axeDownRight.getKeyFrame(animationTimer, true));
-            }
-        }
-
-    }
-
-    public void createAxeSensor() {
-        if (axeSensorFixture != null) return;
-
-        System.out.println("Adding sensor");
-
-        float size = 8f;
-        Vector2 sensorOffset = new Vector2();
-
-        float pushStrength = 0.2f;
-        Vector2 nudge = new Vector2();
-
-        switch (facingDirection) {
-            case NORTH     -> nudge.set(0, pushStrength);
-            case SOUTH     -> nudge.set(0, -pushStrength);
-            case EAST      -> nudge.set(-pushStrength, 0);
-            case WEST      -> nudge.set(pushStrength, 0);
-            case NORTHEAST -> nudge.set( -pushStrength,  pushStrength);
-            case NORTHWEST -> nudge.set(pushStrength,  pushStrength);
-            case SOUTHEAST -> nudge.set( -pushStrength, -pushStrength);
-            case SOUTHWEST -> nudge.set(pushStrength, -pushStrength);
-        }
-
-        body.setLinearVelocity(nudge);
-
-        // Use direction to set offset
-        switch (facingDirection) {
-            case NORTH     -> sensorOffset.set(0, size);
-            case SOUTH     -> sensorOffset.set(0, -size);
-            case EAST      -> sensorOffset.set(-size, 0);
-            case WEST      -> sensorOffset.set(size, 0);
-            case NORTHEAST -> sensorOffset.set(-size * 0.7071f, size * 0.7071f);
-            case NORTHWEST -> sensorOffset.set(size * 0.7071f, size * 0.7071f);
-            case SOUTHEAST -> sensorOffset.set(-size * 0.7071f, -size * 0.7071f);
-            case SOUTHWEST -> sensorOffset.set(size * 0.7071f, -size * 0.7071f);
-        }
-
-        sensorOffset.add(MathUtils.random(-0.5f, 0.5f), MathUtils.random(-0.5f, 0.5f));
-
-
-
-        // Create sensor shape at offset
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(4f, 4f, sensorOffset, 0f);
-
-        FixtureDef fd = new FixtureDef();
-        fd.shape = shape;
-        fd.isSensor = true;
-
-        axeSensorFixture = body.createFixture(fd);
-        axeSensorFixture.setUserData("axeSensor");
-
-        shape.dispose();
     }
 
     public void setupSprite () {
@@ -249,6 +101,8 @@ public class Player extends Entity {
             speed = originalSpeed;
         }
 
+        keyHandler.checkSwitchItem();
+
         inputDirection.set(0, 0);
 
         keyHandler.wantsToAttack(delta);
@@ -257,30 +111,7 @@ public class Player extends Entity {
             keyHandler.handleSettingCardinalMovement();
         }
 
-
-//        if (actionState == ActionState.ATTACKING) {
-//            body.setLinearVelocity(0, 0);
-//            if (axeSensorFixture == null) {
-//                createAxeSensor();
-//            }
-//        } else {
-//            if (axeSensorFixture != null) {
-//                body.destroyFixture(axeSensorFixture);
-//                axeSensorFixture = null;
-//            }
-//        }
-
-        if (actionState == ActionState.ATTACKING) {
-//            body.setLinearVelocity(0, 0);
-            if (axeSensorFixture == null) {
-                createAxeSensor();
-            }
-        } else {
-            if (axeSensorFixture != null) {
-                body.destroyFixture(axeSensorFixture);
-                axeSensorFixture = null;
-            }
-        }
+        attackHandler.handleAttackLogic();
 
         if (actionState == ActionState.MOVING) {
             direction.set(inputDirection);
@@ -295,7 +126,7 @@ public class Player extends Entity {
         pos.y = body.getPosition().y - height / 2f;
 
         updateSprite();
-        updateSpriteAnimation();
+        animationHandler.updateSpriteAnimation();
 
     }
 

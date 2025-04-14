@@ -11,9 +11,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import constants.Const;
 import entity.Entity_Tree;
 import entity.Player;
+import hud.HUD;
 import manager.MapManager;
 
 public class GameScreen implements Screen {
@@ -24,6 +26,7 @@ public class GameScreen implements Screen {
     SpriteBatch batch;
     OrthogonalTiledMapRenderer mapRenderer;
     public Player player;
+    public HUD hud;
     private ShapeRenderer shapeRenderer;
 
     public GameCamera gameCamera;
@@ -37,7 +40,6 @@ public class GameScreen implements Screen {
         gameMap = mapManager.initialiseGameMap();
         box2DWorld = new Box2DWorld(this);
         mapManager.initialiseObjectArrays();
-
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         gameCamera = new GameCamera();
@@ -45,6 +47,7 @@ public class GameScreen implements Screen {
         player = new Player(new Vector2(10 * Const.OGTILESIZE, 10 * Const.OGTILESIZE),  16, 16, this);
         // Set up renderer
         mapRenderer = new OrthogonalTiledMapRenderer(gameMap, 1f);
+        hud = new HUD(this, batch);
 
 
 
@@ -76,7 +79,7 @@ public class GameScreen implements Screen {
         }
 
         batch.end();
-
+        hud.render(delta);
         // ✅ Step Box2D
         box2DWorld.step(delta);
         box2DWorld.renderDebug(gameCamera.getCamera());
@@ -84,7 +87,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        hud.resize(width, height);
     }
 
     @Override

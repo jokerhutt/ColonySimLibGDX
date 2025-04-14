@@ -2,10 +2,7 @@ package manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import entity.ActionState;
-import entity.ActionStateHandler;
-import entity.FacingDirection;
-import entity.Player;
+import entity.*;
 
 public class KeyHandler {
     Player player;
@@ -113,6 +110,16 @@ public class KeyHandler {
         }
         return false;
 
+    }
+
+    public void checkSwitchItem () {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            if (player.actionItem != ActionItem.AXE) {
+                player.actionItem = ActionItem.AXE;
+            } else {
+                player.actionItem = ActionItem.PICKAXE;
+            }
+        }
     }
 
 

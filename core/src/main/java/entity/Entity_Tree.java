@@ -16,6 +16,7 @@ public class Entity_Tree extends Entity{
     Rectangle transparentRectangle;
     private boolean queuedHit = false;
     boolean hasBeenHit = false;
+    Texture deadTexture = new Texture("treeTrunk2.png");
 
 
     public Entity_Tree (Vector2 pos, float width, float height, GameScreen screen) {
@@ -65,8 +66,20 @@ public class Entity_Tree extends Entity{
     }
 
     public void takeDamage () {
+        if (this.health > 0) {
             this.health --;
             System.out.println("Took dmg health now + " + health);
+            if (this.health == 0){
+                changeSpriteBasedOnHealth();
+            }
+        }
+    }
+
+    public void changeSpriteBasedOnHealth () {
+            screen.player.woodCount++;
+            screen.hud.woodDisplay.updateValue(screen.player.woodCount, "", "");
+            this.sprite.setSize(sprite.getWidth(), sprite.getHeight() / 2f);
+            this.sprite.setRegion(deadTexture);
     }
 
 }

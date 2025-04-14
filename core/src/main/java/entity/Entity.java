@@ -20,7 +20,7 @@ public abstract class Entity {
     String type;
     GameScreen screen;
 
-    public ActionState actionState = ActionState.NORMAL;
+    public ActionState actionState = ActionState.IDLE;
 
     public Entity(Vector2 pos, float width, float height, GameScreen screen) {
         this.pos = pos;
