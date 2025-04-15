@@ -25,14 +25,14 @@ public class KeyHandler {
             if (ActionStateHandler.checkNewStateValidity(ActionState.MOVING, player)) {
                 player.actionState = ActionState.MOVING;
                 player.inputDirection.set(0, 1);
-                player.facingDirection = FacingDirection.NORTH;
+
             }
             return true;
         } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             if (ActionStateHandler.checkNewStateValidity(ActionState.MOVING, player)) {
                 player.actionState = ActionState.MOVING;
                 player.inputDirection.set(-1, 0);
-                player.facingDirection = FacingDirection.EAST;
+
             }
             return true;
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
@@ -40,13 +40,13 @@ public class KeyHandler {
             if (ActionStateHandler.checkNewStateValidity(ActionState.MOVING, player)) {
                 player.actionState = ActionState.MOVING;
                 player.inputDirection.set(0, -1);
-                player.facingDirection = FacingDirection.SOUTH;
+
             }
             return true;
         } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             if (ActionStateHandler.checkNewStateValidity(ActionState.MOVING, player)) {
                 player.inputDirection.set(1, 0);
-                player.facingDirection = FacingDirection.WEST;
+
                 player.actionState = ActionState.MOVING;
             }
             return true;
@@ -64,22 +64,22 @@ public class KeyHandler {
 
         if (Gdx.input.isKeyPressed(Input.Keys.W) && Gdx.input.isKeyPressed(Input.Keys.A)) {
             player.inputDirection.set(-1, 1);
-            player.facingDirection = FacingDirection.NORTHEAST;
+
             return true;
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.W) && Gdx.input.isKeyPressed(Input.Keys.D)) {
             player.inputDirection.set(1, 1);
-            player.facingDirection = FacingDirection.NORTHWEST;
+
             return true;
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.S) && Gdx.input.isKeyPressed(Input.Keys.A)) {
             player.inputDirection.set(-1, -1);
-            player.facingDirection = FacingDirection.SOUTHEAST;
+
             return true;
         }
         else if (Gdx.input.isKeyPressed(Input.Keys.S) && Gdx.input.isKeyPressed(Input.Keys.D)) {
             player.inputDirection.set(1, -1);
-            player.facingDirection = FacingDirection.SOUTHWEST;
+
             return true;
         }
 
@@ -109,7 +109,7 @@ public class KeyHandler {
                 player.actionState = ActionState.IDLE;
             }
         } else {
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            if (Gdx.input.justTouched()) {
                 player.attackTimer = 0f;
                 player.hasHitThisAttack = false;
                 player.actionState = ActionState.ATTACKING;

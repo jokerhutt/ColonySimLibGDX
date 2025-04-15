@@ -87,9 +87,7 @@ public class Player extends Entity {
         } else {
             speed = originalSpeed;
         }
-        System.out.println("DIR IS " + direction + " speed is " + speed);
         body.setLinearVelocity(direction.scl(speed));
-        System.out.println(body.getLinearVelocity().x + " " + body.getLinearVelocity().y);
     }
 
     public void update (float delta) {
@@ -114,6 +112,7 @@ public class Player extends Entity {
         if (!keyHandler.handleSettingDiagonalMovement()) {
             keyHandler.handleSettingCardinalMovement();
         }
+        updateFacingDirection(screen.cursorHandler.currentPos);
 
         attackHandler.handleAttackLogic();
 
@@ -132,6 +131,33 @@ public class Player extends Entity {
         updateSprite();
         animationHandler.updateSpriteAnimation();
 
+    }
+
+    public void updateFacingDirection(Vector2 cursorPos) {
+        float dx = cursorPos.x - body.getPosition().x;
+        float dy = cursorPos.y - body.getPosition().y   ;
+
+        float angle = MathUtils.atan2(dy, -dx) * MathUtils.radiansToDegrees;
+
+        // Normalize angle to [0, 360)
+        if (angle < 0) angle += 360;
+
+        if (angle >= 345 || angle < 15)
+            facingDirection = FacingDirection.EAST;
+        else if (angle >= 15 && angle < 60)
+            facingDirection = FacingDirection.NORTHEAST;
+        else if (angle >= 60 && angle < 120)
+            facingDirection = FacingDirection.NORTH;
+        else if (angle >= 120 && angle < 165)
+            facingDirection = FacingDirection.NORTHWEST;
+        else if (angle >= 165 && angle < 195)
+            facingDirection = FacingDirection.WEST;
+        else if (angle >= 195 && angle < 240)
+            facingDirection = FacingDirection.SOUTHWEST;
+        else if (angle >= 240 && angle < 300)
+            facingDirection = FacingDirection.SOUTH;
+        else if (angle >= 300 && angle < 345)
+            facingDirection = FacingDirection.SOUTHEAST;
     }
 
 

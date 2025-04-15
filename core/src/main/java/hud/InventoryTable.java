@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import entity.ActionState;
 import gameItem.GameItem;
 import jokerhut.main.GameScreen;
 
@@ -77,6 +78,7 @@ public class InventoryTable extends Table {
                     screen.player.inventory.updateItem(index);
                     screen.cursorHandler.handleSpecialClick();
                     selectedIndex = index;
+
                     refreshInventory();
                     return true;
                 }

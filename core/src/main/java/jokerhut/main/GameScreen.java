@@ -58,16 +58,17 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
+        delta = Math.min(delta, 1/60f);
         player.keyHandler.toggleCameraZoom();
         if (zoomCamera) {
             gameCamera.getCamera().zoom = 0.5f;
         } else {
             gameCamera.getCamera().zoom = 1f;
         }
-
+        box2DWorld.step(delta);
         gameCamera.updateCamera(delta);
         //UPDATE
+        cursorHandler.firstUpdate(delta, gameCamera.getCamera());
         player.update(delta);
         for (Entity_Tree tree : mapManager.treeArray) {
             tree.update(delta);
@@ -77,7 +78,7 @@ public class GameScreen implements Screen {
             rock.update(delta);
         }
 
-        cursorHandler.update(delta, gameCamera.getCamera(), this);
+        cursorHandler.update(delta);
 
         //set view to game camere
         mapRenderer.setView(gameCamera.getCamera());
@@ -110,10 +111,9 @@ public class GameScreen implements Screen {
 
         debugManager.renderARectangleFromArray(mapManager.treeArray, this, shapeRenderer);
         // ✅ Step Box2D
-        box2DWorld.step(delta);
         box2DWorld.renderDebug(gameCamera.getCamera());
 
-
+        System.out.println("Delta time: " + delta + " seconds");
 
     }
 

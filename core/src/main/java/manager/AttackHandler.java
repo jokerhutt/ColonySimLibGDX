@@ -18,9 +18,12 @@ public class AttackHandler {
     public void handleAttackLogic () {
         if (player.actionState == ActionState.ATTACKING) {
             if (player.actionSensorFixture == null) {
-                switch (player.actionItem) {
-                 case AXE -> Box2DHelper.createActionSensor("axeSensor", player);
-                 case PICKAXE -> Box2DHelper.createActionSensor("pickaxeSensor", player);
+                float distanceToCursor = player.body.getPosition().dst(player.screen.cursorHandler.currentPos);
+                if (distanceToCursor <= 1f) {
+                    switch (player.actionItem) {
+                        case AXE -> Box2DHelper.createActionSensor("axeSensor", player);
+                        case PICKAXE -> Box2DHelper.createActionSensor("pickaxeSensor", player);
+                    }
                 }
             }
         } else {

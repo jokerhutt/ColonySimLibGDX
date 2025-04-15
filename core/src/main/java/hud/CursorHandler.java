@@ -18,7 +18,7 @@ public class CursorHandler {
     private Texture cursorClickedTexture;
     private Texture specialActionClicked;
 
-    private Vector2 currentPos;
+    public Vector2 currentPos;
     private Vector3 targetPos;
     private float lerpSpeed = 25f;
 
@@ -35,12 +35,14 @@ public class CursorHandler {
         targetPos = new Vector3();
     }
 
-    public void update(float delta, OrthographicCamera camera, GameScreen screen) {
+    public void firstUpdate (float delta, OrthographicCamera camera) {
         targetPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         camera.unproject(targetPos); // needs Vector3
-
         currentPos.lerp(new Vector2(targetPos.x, targetPos.y), lerpSpeed * delta);
 
+    }
+
+    public void update(float delta) {
 
         if (!hasClicked) {
             if (KeyHandler.checkIfClicked()) {

@@ -54,17 +54,23 @@ public class Box2DHelper {
 
         player.body.setLinearVelocity(nudge);
 
-        // Use direction to set offset
-        switch (player.facingDirection) {
-            case NORTH     -> sensorOffset.set(0, size);
-            case SOUTH     -> sensorOffset.set(0, -size);
-            case EAST      -> sensorOffset.set(-size, 0);
-            case WEST      -> sensorOffset.set(size, 0);
-            case NORTHEAST -> sensorOffset.set(-size * 0.7071f, size * 0.7071f);
-            case NORTHWEST -> sensorOffset.set(size * 0.7071f, size * 0.7071f);
-            case SOUTHEAST -> sensorOffset.set(-size * 0.7071f, -size * 0.7071f);
-            case SOUTHWEST -> sensorOffset.set(size * 0.7071f, -size * 0.7071f);
-        }
+//        // Use direction to set offset
+//        switch (player.facingDirection) {
+//            case NORTH     -> sensorOffset.set(0, size);
+//            case SOUTH     -> sensorOffset.set(0, -size);
+//            case EAST      -> sensorOffset.set(-size, 0);
+//            case WEST      -> sensorOffset.set(size, 0);
+//            case NORTHEAST -> sensorOffset.set(-size * 0.7071f, size * 0.7071f);
+//            case NORTHWEST -> sensorOffset.set(size * 0.7071f, size * 0.7071f);
+//            case SOUTHEAST -> sensorOffset.set(-size * 0.7071f, -size * 0.7071f);
+//            case SOUTHWEST -> sensorOffset.set(size * 0.7071f, -size * 0.7071f);
+//        }
+
+        Vector2 cursorPos = player.screen.cursorHandler.currentPos;
+        Vector2 bodyCenter = player.body.getPosition();
+
+// Calculate offset from body center to cursor
+        sensorOffset.set(cursorPos).sub(bodyCenter);
 
 
         // Create sensor shape at offset
