@@ -18,6 +18,7 @@ public class HUD {
     public PairActorGroup woodDisplay;
     public PairActorGroup rockDisplay;
     Table woodTable;
+    InventoryTable inventoryTable;
 
     public HUD (GameScreen screen, SpriteBatch batch) {
 
@@ -34,10 +35,16 @@ public class HUD {
         woodTable.add(woodDisplay).padTop(10); // no need to right-align here
         stage.addActor(woodTable);
 
+        inventoryTable = new InventoryTable(screen);
+        inventoryTable.setFillParent(true);
+        stage.addActor(inventoryTable);
+
+
     }
 
     public void render (float delta) {
         stage.getViewport().apply();
+        inventoryTable.refreshInventory();
         stage.act(delta);
         stage.draw();
     }

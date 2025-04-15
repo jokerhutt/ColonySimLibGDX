@@ -16,6 +16,7 @@ import constants.Const;
 import jokerhut.main.AnimationHandler;
 import jokerhut.main.Box2DWorld;
 import jokerhut.main.GameScreen;
+import jokerhut.main.Inventory;
 import manager.AttackHandler;
 import manager.KeyHandler;
 
@@ -45,6 +46,7 @@ public class Player extends Entity {
     public Fixture actionSensorFixture = null;
     public FacingDirection facingDirection = FacingDirection.SOUTH;
     public boolean hasHitThisAttack = false;
+    public Inventory inventory;
 
     public int woodCount = 0;
     public int stoneCount = 0;
@@ -62,6 +64,7 @@ public class Player extends Entity {
         screen.box2DWorld.addEntityToMap(this);
         animationHandler.setupAnimations();
         setupSprite();
+        this.inventory = new Inventory(this);
 
         attackRect = new Rectangle();
 //        updateAxeCollisionZone();
