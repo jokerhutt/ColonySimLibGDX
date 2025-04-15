@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import gameItem.GameItem;
 import jokerhut.main.GameScreen;
 
 public class InventoryTable extends Table {
@@ -57,7 +58,7 @@ public class InventoryTable extends Table {
 //        this.add(textBox).size(320, 100).colspan(3).center();
 //        this.row().padTop(10);
 
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 6; i++) {
             GameItem item = null;
             if (i < screen.player.inventory.inventoryArray.length) {
                 item = screen.player.inventory.inventoryArray[i];
@@ -74,13 +75,14 @@ public class InventoryTable extends Table {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     screen.player.inventory.updateItem(index);
+                    screen.cursorHandler.handleSpecialClick();
                     selectedIndex = index;
                     refreshInventory();
                     return true;
                 }
             });
 
-            this.add(slot).size(128, 128).pad(4);
+            this.add(slot).size(96, 96).pad(4);
 
             if ((i + 1) % 3 == 0) {
                 this.row();

@@ -1,13 +1,13 @@
 package hud;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import jokerhut.main.GameScreen;
-
 
 
 public class HUD {
@@ -18,14 +18,13 @@ public class HUD {
     public PairActorGroup woodDisplay;
     public PairActorGroup rockDisplay;
     Table woodTable;
-    InventoryTable inventoryTable;
+    public InventoryTable inventoryTable;
 
     public HUD (GameScreen screen, SpriteBatch batch) {
 
         stage = new Stage(new ScreenViewport(), batch);
         this.screen = screen;
         Gdx.input.setInputProcessor(stage);
-
         woodDisplay = new PairActorGroup(screen, "lumberResourceIcon.png", "Wood:", screen.player.woodCount, "left", 'M', 2f);
         rockDisplay= new PairActorGroup(screen, "rockResourceIcon.png", "Wood:", screen.player.woodCount, "left", 'M', 2f);
         woodTable = new Table();

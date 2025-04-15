@@ -13,7 +13,7 @@ import jokerhut.main.GameScreen;
 
 public class Entity_Tree extends Entity{
 
-    Rectangle transparentRectangle;
+    public Rectangle transparentRectangle;
     private boolean queuedHit = false;
     boolean hasBeenHit = false;
     Texture deadTexture = new Texture("treeTrunk2.png");
@@ -24,24 +24,13 @@ public class Entity_Tree extends Entity{
         this.texture = new Texture("treeTexture.png");
         this.transparentRectangle = new Rectangle();
         setupSprite();
-        this.transparentRectangle.width = sprite.getWidth();
-        this.transparentRectangle.height = sprite.getHeight();
-    }
+        float shrinkAmountX = 0.8f;
+        float shrinkAmountY = 0.9f;
 
-    @Override
-    public void createBody(Box2DWorld box2DWorld) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(pos.x + width / 2f, (pos.y + height / 6f)) ; // center the box
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-
-        body = box2DWorld.world.createBody(bodyDef);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / 4f, height / 6f); // full size, centered
-
-        body.createFixture(shape, 0f); // density = 0 for static
-        body.setUserData(this);
-        shape.dispose();
+        this.transparentRectangle.width = sprite.getWidth() - shrinkAmountX;
+        this.transparentRectangle.height = sprite.getHeight() - shrinkAmountY;
+        this.transparentRectangle.x = sprite.getX() + shrinkAmountX / 2f;
+        this.transparentRectangle.y = sprite.getY() + shrinkAmountY / 2f;
     }
 
     public void queueHit() {
@@ -58,7 +47,7 @@ public class Entity_Tree extends Entity{
             queuedHit = false;
         }
 
-        if (this.sprite.getBoundingRectangle().overlaps(screen.player.sprite.getBoundingRectangle())) {
+        if (this.transparentRectangle.overlaps(screen.player.sprite.getBoundingRectangle())) {
             sprite.setAlpha(0.5f);
         } else {
             sprite.setAlpha(1f);
@@ -76,7 +65,7 @@ public class Entity_Tree extends Entity{
     }
 
     public void changeSpriteBasedOnHealth () {
-            screen.player.woodCount++;
+            screen.player.inventory.addToInventory("wood", "resource");
             screen.hud.woodDisplay.updateValue(screen.player.woodCount, "", "");
             this.sprite.setSize(sprite.getWidth(), sprite.getHeight() / 2f);
             this.sprite.setRegion(deadTexture);

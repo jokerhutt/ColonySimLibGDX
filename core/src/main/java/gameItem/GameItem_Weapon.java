@@ -1,4 +1,4 @@
-package hud;
+package gameItem;
 
 import com.badlogic.gdx.graphics.Texture;
 
@@ -9,6 +9,7 @@ public class GameItem_Weapon extends GameItem {
         setupWeapon();
         this.image = new Texture(this.imagePath);
         this.type = "weapon";
+        this.countable = false;
     }
 
     public void setupWeapon () {

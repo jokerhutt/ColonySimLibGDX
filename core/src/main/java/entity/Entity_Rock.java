@@ -63,7 +63,7 @@ public class Entity_Rock extends Entity{
     }
 
     public void changeSpriteBasedOnHealth () {
-        screen.player.woodCount++;
+        screen.player.inventory.addToInventory("rock", "resource");
         screen.hud.rockDisplay.updateValue(screen.player.woodCount, "", "");
         this.sprite.setRegion(deadTexture);
     }

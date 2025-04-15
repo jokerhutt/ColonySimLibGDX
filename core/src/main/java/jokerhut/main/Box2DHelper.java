@@ -2,12 +2,33 @@ package jokerhut.main;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import constants.Const;
+import entity.Entity;
 import entity.Player;
 
 public class Box2DHelper {
+
+    public static void createBody (Box2DWorld box2DWorld, Entity entity) {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.position.set(entity.pos.x + entity.width / 2f, (entity.pos.y + entity.height / 6f)) ; // center the box
+        if (entity instanceof Player) {
+            bodyDef.type = BodyDef.BodyType.DynamicBody;
+        } else {
+            bodyDef.type = BodyDef.BodyType.StaticBody;
+        }
+
+        entity.body = box2DWorld.world.createBody(bodyDef);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(entity.width / 4f, entity.height / 6f); // full size, centered
+
+        entity.body.createFixture(shape, 0f); // density = 0 for static
+        entity.body.setUserData(entity);
+        shape.dispose();
+    }
 
     public static void createActionSensor(String sensorName, Player player) {
         if (player.actionSensorFixture != null) return;

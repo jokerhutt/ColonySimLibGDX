@@ -1,4 +1,4 @@
-package hud;
+package gameItem;
 
 import com.badlogic.gdx.graphics.Texture;
 

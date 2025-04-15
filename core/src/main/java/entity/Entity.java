@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import jokerhut.main.Box2DHelper;
 import jokerhut.main.Box2DWorld;
 import jokerhut.main.GameScreen;
 
@@ -29,7 +30,9 @@ public abstract class Entity {
         this.screen = screen;
     }
 
-    public abstract void createBody (Box2DWorld box2DWorld);
+    public void createBody (Box2DWorld box2DWorld) {
+        Box2DHelper.createBody(box2DWorld, this);
+    };
 
     public void setupSprite () {
         this.sprite = new Sprite(texture);

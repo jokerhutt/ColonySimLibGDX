@@ -90,6 +90,14 @@ public class KeyHandler {
         return false;
     }
 
+    public static boolean checkIfClicked () {
+        if (Gdx.input.justTouched()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public boolean wantsToAttack (float delta) {
 
         if (player.actionState == ActionState.ATTACKING) {
@@ -118,15 +126,15 @@ public class KeyHandler {
         }
     }
 
-    public void checkSwitchItem () {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            if (player.actionItem != ActionItem.AXE) {
-                player.actionItem = ActionItem.AXE;
-            } else {
-                player.actionItem = ActionItem.PICKAXE;
-            }
-        }
-    }
+//    public void checkSwitchItem () {
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+//            if (player.actionItem != ActionItem.AXE) {
+//                player.actionItem = ActionItem.AXE;
+//            } else {
+//                player.actionItem = ActionItem.PICKAXE;
+//            }
+//        }
+//    }
 
 
 }

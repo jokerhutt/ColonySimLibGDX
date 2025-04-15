@@ -13,10 +13,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import constants.Const;
-import jokerhut.main.AnimationHandler;
-import jokerhut.main.Box2DWorld;
-import jokerhut.main.GameScreen;
-import jokerhut.main.Inventory;
+import jokerhut.main.*;
 import manager.AttackHandler;
 import manager.KeyHandler;
 
@@ -84,35 +81,31 @@ public class Player extends Entity {
         this.sprite.setPosition(pos.x, pos.y);
     }
 
-
-    @Override
-    public void createBody(Box2DWorld box2DWorld) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.position.set(pos.x + width / 2f, (pos.y + height / 6f)) ; // center the box
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-
-        body = box2DWorld.world.createBody(bodyDef);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / 4f, height / 6f); // full size, centered
-
-        body.createFixture(shape, 0f); // density = 0 for static
-        shape.dispose();
-    }
-
     public void applyVelocityFromDirection() {
-        body.setLinearVelocity(direction.scl(speed));
-    }
-
-    public void update (float delta) {
-
         if (keyHandler.wantsToRun()){
             speed = runningSpeed;
         } else {
             speed = originalSpeed;
         }
+        System.out.println("DIR IS " + direction + " speed is " + speed);
+        body.setLinearVelocity(direction.scl(speed));
+        System.out.println(body.getLinearVelocity().x + " " + body.getLinearVelocity().y);
+    }
 
-        keyHandler.checkSwitchItem();
+    public void update (float delta) {
+
+        if (inventory.currentItem != null) {
+            if (inventory.currentItem.type == "weapon") {
+                switch (inventory.currentItem.name) {
+                    case "axe" -> actionItem = ActionItem.AXE;
+                    case "pickaxe" -> actionItem = ActionItem.PICKAXE;
+                }
+            }
+        }
+
+        //UPDATE ACTION STATES
+
+//        keyHandler.checkSwitchItem();
 
         inputDirection.set(0, 0);
 
@@ -126,6 +119,7 @@ public class Player extends Entity {
 
         if (actionState == ActionState.MOVING) {
             direction.set(inputDirection);
+            System.out.println(direction.x + " " + direction.y);
             animationTimer += delta;
             applyVelocityFromDirection();
         } else if (actionState == ActionState.IDLE){
@@ -135,7 +129,6 @@ public class Player extends Entity {
 
         pos.x = body.getPosition().x - width / 2f;
         pos.y = body.getPosition().y - height / 2f;
-
         updateSprite();
         animationHandler.updateSpriteAnimation();
 
